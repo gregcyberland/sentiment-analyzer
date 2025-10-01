@@ -59,14 +59,14 @@ docker-compose logs -f
 
 ## Access Your Application
 
-### HTTPS Access (Recommended):
-```
-https://YOUR_EC2_IP
-```
-
-### HTTP Access (Auto-redirects to HTTPS):
+### HTTP Access (Recommended for IP-based deployment):
 ```
 http://YOUR_EC2_IP
+```
+
+### HTTPS Access (May require browser security bypass):
+```
+https://YOUR_EC2_IP
 ```
 
 ### Direct API Access (for debugging):
@@ -74,37 +74,65 @@ http://YOUR_EC2_IP
 http://YOUR_EC2_IP:8000
 ```
 
+**Note**: For IP-based deployments, HTTP access is often more reliable. HTTPS with IP addresses can cause SSL protocol errors in some browsers.
+
 ## API Endpoints
 
 ### Health Check:
 ```bash
-curl -k https://YOUR_EC2_IP/
+curl http://YOUR_EC2_IP/
 ```
 
 ### Sentiment Analysis:
 ```bash
-curl -k -X POST https://YOUR_EC2_IP/analyze \
+curl -X POST http://YOUR_EC2_IP/analyze \
   -H "Content-Type: application/json" \
   -d '{"text_to_analyze": "I am feeling great today!"}'
 ```
 
 ### Message Enhancement:
 ```bash
-curl -k -X POST https://YOUR_EC2_IP/enhance \
+curl -X POST http://YOUR_EC2_IP/enhance \
   -H "Content-Type: application/json" \
   -d '{"message_to_enhance": "thx for the help"}'
 ```
 
 ## SSL Certificate Note
 
-The current configuration uses Caddy's internal TLS, which generates a self-signed certificate. Browsers will show a security warning that you can bypass by clicking "Advanced" and "Proceed to site".
+**Important**: IP-based HTTPS deployments often have SSL protocol issues. For this reason:
 
-For production use with a domain name, consider:
-1. Getting a domain name
-2. Using Let's Encrypt certificates via Caddy
-3. Updating the Caddyfile to use your domain
+1. **Use HTTP for reliable access**: `http://YOUR_EC2_IP`
+2. **HTTPS may work but could show errors**: Browsers may display "ERR_SSL_PROTOCOL_ERROR" or similar
+3. **Self-signed certificates**: Caddy generates self-signed certificates that browsers will warn about
+
+### If you need HTTPS for production:
+1. **Get a domain name** (recommended solution)
+2. **Point the domain to your EC2 IP**
+3. **Update Caddyfile** to use your domain instead of IP
+4. **Use Let's Encrypt** for valid SSL certificates
+
+Example Caddyfile for domain-based deployment:
+```
+yourdomain.com {
+    reverse_proxy message-correction-api:80
+}
+```
 
 ## Troubleshooting
+
+### SSL Protocol Error (ERR_SSL_PROTOCOL_ERROR)
+If you see "This site can't provide a secure connection" or "ERR_SSL_PROTOCOL_ERROR":
+
+1. **Use HTTP instead**: `http://18.141.57.175` (replace with your IP)
+2. **Restart the services**:
+   ```bash
+   docker-compose down
+   docker-compose up -d
+   ```
+3. **Check Caddy logs**:
+   ```bash
+   docker-compose logs caddy
+   ```
 
 ### Check service status:
 ```bash
@@ -125,6 +153,11 @@ docker-compose restart
 ### Check if ports are open:
 ```bash
 netstat -tlnp | grep -E ':(80|443|8000)'
+```
+
+### Test HTTP access:
+```bash
+curl http://YOUR_EC2_IP/
 ```
 
 ## Security Considerations
