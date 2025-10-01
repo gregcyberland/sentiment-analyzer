@@ -4,7 +4,7 @@ services:
   message-correction-api:
     build: .
     ports:
-      - "8080:80"    # 👈 change the exposed port so Caddy can use 80/443
+      - "8000:80"    # 👈 change the exposed port so Caddy can use 80/443
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - EMAIL_USER=${EMAIL_USER}
