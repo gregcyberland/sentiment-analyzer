@@ -10,7 +10,7 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 # Email Configuration
 EMAIL_USER = os.getenv("EMAIL_USER")
 EMAIL_PASS = os.getenv("EMAIL_PASS")
-ALERT_RECIPIENTS =  ["kerxin.lim@cyberland.edu.sg", "gregorio.balonzo@cyberland.edu.sg", "kristopher.ong@cyberland.edu.sg", "okkar.min@cyberland.edu.sg"]  # Edit this list to change email recipients
+ALERT_RECIPIENTS =  ["kerxin.lim@cyberland.edu.sg"]  # Edit this list to change email recipients
 
 # Alert Settings
 HAPPINESS_THRESHOLD = 2  # Alert when happiness_score <= 2 (only unhappy, not neutral)
