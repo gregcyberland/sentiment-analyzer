@@ -1,8 +1,10 @@
+# HTTPS on port 443 - accessible via EC2 IP
 :443 {
     tls internal
-    reverse_proxy sentiment-analyzer:8000
+    reverse_proxy message-correction-api:80
 }
 
+# HTTP on port 80 - redirects to HTTPS
 :80 {
     redir https://{host}{uri}
 }
