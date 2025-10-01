@@ -33,9 +33,9 @@ async def analyze_sentiment(text: str) -> SentimentAnalysisResponse:
             happiness_score=3,
             overall_tone="neutral",
             detected_emotions=["unknown"],
-            situation_summary="Unable to analyze the provided text due to processing error. Manual review may be required to assess the content properly.",
+            situation_summary="Processing error occurred.",
             contains_abuse=False,
-            happiness_low=(3 <= config.HAPPINESS_THRESHOLD),  # Conservative - trigger alert on error
-            email_alert_sent=(3 <= config.HAPPINESS_THRESHOLD),
-            trigger_message="Error processing message"
+            happiness_low=False,
+            email_alert_sent=False,
+            trigger_message=""
         )
