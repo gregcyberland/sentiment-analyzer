@@ -4,7 +4,7 @@ services:
   message-correction-api:
     build: .
     ports:
-      - "80:80"
+      - "8080:80"    # 👈 change the exposed port so Caddy can use 80/443
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - EMAIL_USER=${EMAIL_USER}
@@ -20,3 +20,21 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+
+  caddy:
+    image: caddy:2.7
+    container_name: caddy_server
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - message-correction-api
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:

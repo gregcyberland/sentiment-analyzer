@@ -1,0 +1,8 @@
+:443 {
+    tls internal
+    reverse_proxy message-correction-api:80
+}
+
+:80 {
+    redir https://{host}{uri}
+}
