@@ -1,6 +1,6 @@
 :443 {
     tls internal
-    reverse_proxy 172.17.0.1:8000
+    reverse_proxy sentiment-analyzer:80
 }
 
 :80 {
